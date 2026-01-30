@@ -10,17 +10,19 @@ declare(strict_types=1);
 namespace OCA\Notifications\Controller;
 
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\OCSController;
 
-class OpenMetricsController extends OCSController {
+class StreamingController extends OCSController {
 	/**
 	 * Use StreamTraversableResponse response type
 	 *
-	 * @return StreamTraversableResponse<Http::STATUS_OK, list<empty>, array{}>
+	 * @return StreamTraversableResponse<Http::STATUS_OK, array{}>
 	 *
 	 * 200: Export OK
 	 */
-	public function export(): StreamTraversableResponse {
+	#[ApiRoute(verb: 'GET', url: '/streaming/traversable')]
+	public function traversable(): StreamTraversableResponse {
 		return new StreamTraversableResponse($this->generator());
 	}
 
