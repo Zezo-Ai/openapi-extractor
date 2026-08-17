@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Notifications\Controller;
 
+use OCA\Notifications\NotificationLevel;
 use OCA\Notifications\ResponseDefinitions;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\CORS;
@@ -848,6 +849,18 @@ class SettingsController extends OCSController {
 	 * 403: Admin settings updated
 	 */
 	public function custom403(): DataResponse {
+		return new DataResponse();
+	}
+
+	/**
+	 * A route with a backed enum as a native parameter type
+	 *
+	 * @param NotificationLevel $level Level
+	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>
+	 *
+	 * 200: OK
+	 */
+	public function stringBackedEnumParameter(NotificationLevel $level): DataResponse {
 		return new DataResponse();
 	}
 }

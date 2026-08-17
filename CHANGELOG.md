@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Support backed enums (`enum Foo: string`/`enum Foo: int`) as OpenAPI types, resolved from their native parameter type hint
+
 ### Fixed
 - Clean whitespace in description fields
 

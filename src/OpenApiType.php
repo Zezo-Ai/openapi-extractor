@@ -7,6 +7,7 @@
 
 namespace OpenAPIExtractor;
 
+use PhpParser\Node;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\IntersectionType;
 use PhpParser\Node\Name;
@@ -155,7 +156,7 @@ class OpenApiType {
 			return $type;
 		}
 		if ($node instanceof Name) {
-			return self::resolveIdentifier($context, $definitions, $node->getLast());
+			return self::resolveNativeEnum($context, $node) ?? self::resolveIdentifier($context, $definitions, $node->getLast());
 		}
 		if ($node instanceof IdentifierTypeNode || $node instanceof Identifier) {
 			return self::resolveIdentifier($context, $definitions, $node->name);
@@ -411,6 +412,33 @@ class OpenApiType {
 		Logger::panic($context, "Unable to resolve OpenAPI type:\n" . var_export($node, true) . "\nPlease open an issue at https://github.com/nextcloud/openapi-extractor/issues/new with the error message and a link to your source code.");
 	}
 
+	public static function resolveNativeEnum(string $context, ?Node $node): ?OpenApiType {
+		$nullable = false;
+		if ($node instanceof NullableType) {
+			$nullable = true;
+			$node = $node->type;
+		}
+		if (!$node instanceof Name) {
+			return null;
+		}
+
+		global $enumsByFqcn;
+		$fqcn = ltrim($node->toString(), '\\');
+		if (!array_key_exists($fqcn, $enumsByFqcn)) {
+			return null;
+		}
+
+		$enum = $enumsByFqcn[$fqcn];
+		return new OpenApiType(
+			context: $context,
+			type: $enum->type,
+			format: $enum->format,
+			description: $enum->description,
+			enum: $enum->enum,
+			nullable: $nullable,
+		);
+	}
+
 	/**
 	 * @param OpenApiType[] $types
 	 * @return OpenApiType[]
@@ -474,6 +502,7 @@ class OpenApiType {
 						ref: '#/components/schemas/' . Helpers::cleanSchemaName($name),
 					);
 				}
+
 				Logger::panic($context, "Unable to resolve OpenAPI type for identifier '" . $name . "'");
 			})(),
 		};
