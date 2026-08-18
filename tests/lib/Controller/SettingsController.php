@@ -863,4 +863,16 @@ class SettingsController extends OCSController {
 	public function stringBackedEnumParameter(NotificationLevel $level): DataResponse {
 		return new DataResponse();
 	}
+
+	/**
+	 * A route using the built-in SortDirection enum as a native parameter type
+	 *
+	 * @param \SortDirection $direction Direction
+	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>
+	 *
+	 * 200: OK
+	 */
+	public function sortDirectionParameter(\SortDirection $direction): DataResponse {
+		return new DataResponse();
+	}
 }

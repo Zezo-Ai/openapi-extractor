@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Support backed enums (`enum Foo: string`/`enum Foo: int`) as OpenAPI types, resolved from their native parameter type hint
+- Support the built-in `SortDirection` enum from PHP 8.6 (unbacked, so its cases are mapped to the `'ASC'`/`'DESC'` strings)
 
 ### Fixed
 - Clean whitespace in description fields

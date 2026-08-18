@@ -495,6 +495,7 @@ class OpenApiType {
 			'mixed', 'empty', 'array' => new OpenApiType(context: $context, type: 'object'),
 			'object', 'stdClass' => new OpenApiType(context: $context, type: 'object', additionalProperties: true),
 			'null' => new OpenApiType(context: $context, nullable: true),
+			'SortDirection' => new OpenApiType(context: $context, type: 'string', enum: ['ASC', 'DESC']),
 			default => (function () use ($context, $definitions, $name) {
 				if (array_key_exists($name, $definitions)) {
 					return new OpenApiType(
