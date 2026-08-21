@@ -439,6 +439,26 @@ class OpenApiType {
 		);
 	}
 
+	public static function isInjectedParameter(?Node $node): bool {
+		if ($node instanceof NullableType) {
+			$node = $node->type;
+		}
+		if (!$node instanceof Name) {
+			return false;
+		}
+		if (self::resolveNativeEnum('', $node) !== null) {
+			return false;
+		}
+		// Anything else resolveIdentifier recognizes (e.g. the built-in
+		// `SortDirection`) is a real, documentable type, not a service.
+		try {
+			self::resolveIdentifier('', [], $node->getLast());
+			return false;
+		} catch (LoggerException) {
+			return true;
+		}
+	}
+
 	/**
 	 * @param OpenApiType[] $types
 	 * @return OpenApiType[]

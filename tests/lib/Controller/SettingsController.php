@@ -23,6 +23,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
+use OCP\IUser;
 
 /**
  * @psalm-import-type NotificationsPushDevice from ResponseDefinitions
@@ -873,6 +874,18 @@ class SettingsController extends OCSController {
 	 * 200: OK
 	 */
 	public function sortDirectionParameter(\SortDirection $direction): DataResponse {
+		return new DataResponse();
+	}
+
+	/**
+	 * A route with an injected service parameter, which needs no docs and isn't part of the API surface
+	 *
+	 * @param string $path Path of the file
+	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>
+	 *
+	 * 200: OK
+	 */
+	public function injectedServiceParameter(IUser $user, string $path): DataResponse {
 		return new DataResponse();
 	}
 }

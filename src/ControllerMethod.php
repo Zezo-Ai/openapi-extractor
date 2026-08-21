@@ -468,6 +468,13 @@ class ControllerMethod {
 		foreach ($methodParameters as $methodParameter) {
 			$methodParameterName = $methodParameter->var->name;
 
+			// Services like `\OCP\IUser` are injected by the dispatcher, never
+			// filled from the request - they need no docs and aren't part of
+			// the API surface.
+			if (OpenApiType::isInjectedParameter($methodParameter->type)) {
+				continue;
+			}
+
 			$paramTag = null;
 			$psalmParamTag = null;
 			foreach ($docParameters as $docParameterType => $typeDocParameters) {

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support backed enums (`enum Foo: string`/`enum Foo: int`) as OpenAPI types, resolved from their native parameter type hint
 - Support the built-in `SortDirection` enum from PHP 8.6 (unbacked, so its cases are mapped to the `'ASC'`/`'DESC'` strings)
+- Ignore controller method parameters typed as an injected service (e.g. `\OCP\IUser`) instead of requiring docs for them and listing them in the generated OpenAPI file
 
 ### Fixed
 - Clean whitespace in description fields
