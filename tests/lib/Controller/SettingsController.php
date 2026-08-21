@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace OCA\Notifications\Controller;
 
+use OCA\Notifications\NotificationLevel;
 use OCA\Notifications\ResponseDefinitions;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\CORS;
@@ -22,6 +23,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
+use OCP\IUser;
 
 /**
  * @psalm-import-type NotificationsPushDevice from ResponseDefinitions
@@ -848,6 +850,42 @@ class SettingsController extends OCSController {
 	 * 403: Admin settings updated
 	 */
 	public function custom403(): DataResponse {
+		return new DataResponse();
+	}
+
+	/**
+	 * A route with a backed enum as a native parameter type
+	 *
+	 * @param NotificationLevel $level Level
+	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>
+	 *
+	 * 200: OK
+	 */
+	public function stringBackedEnumParameter(NotificationLevel $level): DataResponse {
+		return new DataResponse();
+	}
+
+	/**
+	 * A route using the built-in SortDirection enum as a native parameter type
+	 *
+	 * @param \SortDirection $direction Direction
+	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>
+	 *
+	 * 200: OK
+	 */
+	public function sortDirectionParameter(\SortDirection $direction): DataResponse {
+		return new DataResponse();
+	}
+
+	/**
+	 * A route with an injected service parameter, which needs no docs and isn't part of the API surface
+	 *
+	 * @param string $path Path of the file
+	 * @return DataResponse<Http::STATUS_OK, array{}, array{}>
+	 *
+	 * 200: OK
+	 */
+	public function injectedServiceParameter(IUser $user, string $path): DataResponse {
 		return new DataResponse();
 	}
 }

@@ -468,6 +468,13 @@ class ControllerMethod {
 		foreach ($methodParameters as $methodParameter) {
 			$methodParameterName = $methodParameter->var->name;
 
+			// Services like `\OCP\IUser` are injected by the dispatcher, never
+			// filled from the request - they need no docs and aren't part of
+			// the API surface.
+			if (OpenApiType::isInjectedParameter($methodParameter->type)) {
+				continue;
+			}
+
 			$paramTag = null;
 			$psalmParamTag = null;
 			foreach ($docParameters as $docParameterType => $typeDocParameters) {
@@ -498,7 +505,15 @@ class ControllerMethod {
 			// Only keep lines that don't match the status code pattern in the description
 			$description = Helpers::cleanDocComment(implode("\n", array_filter(array_filter(explode("\n", $description), static fn (string $line): bool => trim($line) !== ''), static fn (string $line): bool => in_array(preg_match(self::STATUS_CODE_DESCRIPTION_PATTERN, $line), [0, false], true))));
 
-			if ($paramTag instanceof ParamTagValueNode && $psalmParamTag instanceof ParamTagValueNode) {
+			$nativeEnumType = OpenApiType::resolveNativeEnum($context . ': @param: ' . $methodParameterName, $methodParameter->type);
+
+			if ($nativeEnumType !== null) {
+				if (!$paramTag instanceof ParamTagValueNode && !$psalmParamTag instanceof ParamTagValueNode && !$allowMissingDocs) {
+					Logger::error($context, "Missing doc parameter for '" . $methodParameterName . "'");
+					continue;
+				}
+				$type = $nativeEnumType;
+			} elseif ($paramTag instanceof ParamTagValueNode && $psalmParamTag instanceof ParamTagValueNode) {
 				try {
 					$type = OpenApiType::resolve(
 						$context . ': @param: ' . $psalmParamTag->parameterName,
